@@ -1,13 +1,12 @@
-# Sample Hardhat Project
+# Subgraph for attestation station
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Heavily inspired from https://github.com/graphprotocol/hardhat-graph-demo
 
-Try running some of the following tasks:
+Applied to https://community.optimism.io/docs/governance/attestation-station/#
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+## Run locally
+1. start local hardhat node `npm run hardhat-local`
+2. start docker for the graph `npm run graph-local`
+3. deploy contract locally `npx hardhat deploy --contract-name AttestationStation`
+4. Create a subgraph on the local graph node by running `npm run create-local`
+5. Run subgraph `npm run deploy-local -- --network localhost`
