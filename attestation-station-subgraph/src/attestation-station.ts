@@ -3,31 +3,27 @@ import {
   AttestationStation,
   AttestationCreated
 } from "../generated/AttestationStation/AttestationStation"
-import { ExampleEntity } from "../generated/schema"
+import { AttestationData, Creator, About } from "../generated/schema"
 
 export function handleAttestationCreated(event: AttestationCreated): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from)
+  let attestation = AttestationData.load(event.transaction.hash)
+  if (!attestation) attestation = new AttestationData(event.transaction.hash)
 
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from)
+  let creator = Creator.load(event.params.creator)
+  if (!creator) creator = new Creator(event.params.creator)
 
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
+  let about = About.load(event.params.about)
+  if (!about) about = new About(event.params.about)
 
   // Entity fields can be set based on event parameters
-  entity.creator = event.params.creator
-  entity.about = event.params.about
+  attestation.creator = event.params.creator
+  attestation.about = event.params.about
+  attestation.val = event.params.val.toHexString()
+  attestation.key = event.params.key.toHexString()
+  attestation.timestamp = event.block.timestamp
 
   // Entities can be written to the store with `.save()`
-  entity.save()
+  attestation.save()
 
   // Note: If a handler doesn't require existing field values, it is faster
   // _not_ to load the entity from the store. Instead, create it fresh with
